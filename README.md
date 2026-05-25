@@ -1,43 +1,56 @@
 # rishuraj2666.github.io
-# Rishuraj Singh
-**Independent Security Researcher & Vulnerability Intelligence Engineer** 📧 [Rishuraj2666@gmail.com](mailto:Rishuraj2666@gmail.com) | 🛠️ Bugcrowd: rishuraj2666 | 🛡️ Intigriti: rishuraj2666
+<div align="center">
+
+# 🛡️ RISHURAJ SINGH
+### **Offensive Security Research & Vulnerability Intelligence**
 
 ---
 
-## Executive Profile
-High-accuracy offensive security researcher specializing in application security, architectural logic flaws, and automated exploit development. Proven track record of identifying high-severity systemic issues across enterprise targets within major crowdsourced security platforms.
+[![Bugcrowd](https://img.shields.io/badge/Bugcrowd-rishuraj266-orange?style=for-the-badge&logo=bugcrowd&logoColor=white)](https://bugcrowd.com/rishuraj266)
+[![Intigriti](https://img.shields.io/badge/Intigriti-Verified__Researcher-blue?style=for-the-badge&logo=securityscorecard&logoColor=white)](https://intigriti.com)
+[![HackerOne](https://img.shields.io/badge/HackerOne-Active-lightgrey?style=for-the-badge&logo=hackerone&logoColor=white)](https://hackerone.com)
 
-## Academic Foundation
-* **Post Graduate Program (PGP) in Cybersecurity** — IIIT Bangalore
-* **Academic Minors in Computer Science Engineering (CSE) & Advanced Technologies** — IIT Mandi
+🚀 **[Rishuraj266@gmail.com](mailto:Rishuraj266@gmail.com)** | 🌐 **[rishuraj2666.github.io](https://rishuraj2666.github.io)**
 
-## Platform Credentials & Track Record
-* **Bugcrowd:** Maintained a **90% Signal/Accuracy Rating** across enterprise triage queues.  
-  *Alternative Tracking / Ninja Routing:* `rishuraj266@bugcrowdninja.com`
-* **Intigriti:** **Verified Researcher Status** awarded following high-impact vulnerability validation and responsible disclosure.
-* **HackerOne:** Active contributor targeting specific asset perimeters.
+</div>
 
 ---
 
-## Featured Security Research & Whitepapers
-
-### 1. [Title of Your Major Intigriti Finding Go Here]
-*Coming Soon / In Review for Public Whitepaper Release*
-* **Impact:** High/Critical Logic Bypass
-* **Core Focus:** Structural exploitation of session states. I am currently converting this validated finding into a formal, peer-reviewed style whitepaper analyzing the root-cause architecture.
+## 💻 Executive Profile
+> High-accuracy offensive security researcher specializing in application security, architectural logic flaws, and automated exploit development. Proven track record of identifying high-severity systemic issues across enterprise targets within major crowdsourced security platforms.
 
 ---
 
-## Automated Exploit PoCs (Proof of Concepts)
+## 🎓 Academic Foundation
+* **Post Graduate Program (PGP) in Cybersecurity** — *IIIT Bangalore*
+* **Academic Minors in Computer Science Engineering & Advanced Technologies** — *IIT Mandi*
 
-### Sample Tool: Automated Session Validation Engine
-Below is a production-grade Python script designed to execute clean multi-threaded concurrency validation in isolated lab environments.
+---
+
+## 📊 Platform Track Record
+* **Bugcrowd Queue Triage:** Maintained a **90% Signal/Accuracy Rating** across enterprise perimeters.
+  * *Alternative Routing:* `rishuraj266@bugcrowdninja.com`
+* **Intigriti Ecosystem:** **Verified Researcher Status** awarded following high-impact vulnerability validation and responsible disclosure.
+
+---
+
+## 🔍 Featured Security Research
+
+### 🔴 High/Critical Logic State Bypass
+*In Review for Public Whitepaper Release / Responsible Disclosure Pending*
+* **Core Focus:** Structural exploitation of multi-tenant session states. Currently converting this validated finding into a formal architectural root-cause analysis.
+
+---
+
+## 🛠️ Automated Exploit PoCs
+
+### Concurrency Validation Engine
+A production-grade lab simulation script designed to execute multi-threaded race-condition testing against isolated session nodes.
 
 ```python
 import requests
 import concurrent.futures
 
-# Professional Python PoC script layout for lab simulation
 TARGET_URL = "[https://target-app.com/api/v1/resource](https://target-app.com/api/v1/resource)"
 HEADERS = {"Authorization": "Bearer TEST_TOKEN"}
 
@@ -46,7 +59,7 @@ def validate_state(thread_id):
         response = requests.get(TARGET_URL, headers=HEADERS, timeout=5)
         if response.status_code == 200:
             print(f"[+] Thread {thread_id}: Node responding securely.")
-    except requests.exceptions.RequestException as e:
+    except requests.exceptions.RequestException:
         print(f"[-] Thread {thread_id}: Connection failed.")
 
 def run_suite():
