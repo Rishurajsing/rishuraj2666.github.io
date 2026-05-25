@@ -86,7 +86,8 @@ Content-Type: application/json
 ###2.2 Response Tampering & Injected State
 Because the application pipeline evaluates the data array structure to determine UI rendering paths, an attacker intercepting the runtime traffic via a localized proxy (e.g., Burp Suite) can strip the error stack entirely and inject an affirmative boolean payload into the stream:
 
-```HTTP/2 200 OK
+```http
+HTTP/2 200 OK
 Alt-Svc: h3=":443"; ma=86400
 Content-Type: application/json
 
@@ -111,9 +112,9 @@ To eliminate vulnerabilities arising from client-side state injection, developer
  Logic Checks: Presentation layer must not gate workflows alone. Multi-stage workflows require server-verified session states at every interaction step.
  API Errors: Avoid structural 200 OK headers containing application-level errors. Use native HTTP strict status codes matching GraphQL error categories.
 Implementation Blueprint:
-### Recommended Secure State Schema Change
-
-'''type VerifyPhonePayload {
+```graphql
+# Recommended Secure State Schema Change
+type VerifyPhonePayload {
   success: Boolean!
   stateVerificationToken: String! # Cryptographically signed server-side token containing timestamped session hash
 }
@@ -125,6 +126,7 @@ All subsequent onboarding mutations must explicitly demand the ⁠stateVerificat
 Concurrency Validation Engine
 A production-grade lab simulation script designed to execute multi-threaded race-condition testing against isolated session node
 
+```python
 import requests
 import concurrent.futures
 
