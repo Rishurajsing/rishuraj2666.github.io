@@ -1,5 +1,4 @@
 # rishuraj2666.github.io
-<div align="center">
 
 # 🛡️ RISHURAJ SINGH
 ### **Offensive Security Research & Vulnerability Intelligence**
@@ -12,7 +11,6 @@
 
 🚀 **[Rishuraj266@gmail.com](mailto:Rishuraj2666@gmail.com)** | 🌐 **[rishuraj2666.github.io](https://rishuraj2666.github.io)**
 
-</div>
 
 ---
 
