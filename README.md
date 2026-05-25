@@ -83,10 +83,10 @@ Content-Type: application/json
   "data": null
 }
 
-##2.2 Response Tampering & Injected State
+###2.2 Response Tampering & Injected State
 Because the application pipeline evaluates the data array structure to determine UI rendering paths, an attacker intercepting the runtime traffic via a localized proxy (e.g., Burp Suite) can strip the error stack entirely and inject an affirmative boolean payload into the stream:
 
-HTTP/2 200 OK
+```HTTP/2 200 OK
 Alt-Svc: h3=":443"; ma=86400
 Content-Type: application/json
 
@@ -95,8 +95,9 @@ Content-Type: application/json
     "verifyPhone": true
   }
 }
+
 Upon receiving this forged structural data packet, the client-side routing controller updates its local authentication context state, explicitly marking the current workflow branch as validated and unlocking restricted verification layers.
-3. Attack Vector & Execution Flow
+### 2.3. Attack Vector & Execution Flow
 1 Interception Phase: Outbound verification requests are mapped using transient, random parameters to bypass unique tracker limitations.
 2 Execution Phase: The structural logic failure response is caught post-execution by the testing agent's local environment.
 3 Exploit Phase: The raw downstream payload is dynamically rewritten to represent an active execution state (⁠true⁠), causing the application layer to drop safety barriers.
@@ -110,8 +111,9 @@ To eliminate vulnerabilities arising from client-side state injection, developer
  Logic Checks: Presentation layer must not gate workflows alone. Multi-stage workflows require server-verified session states at every interaction step.
  API Errors: Avoid structural 200 OK headers containing application-level errors. Use native HTTP strict status codes matching GraphQL error categories.
 Implementation Blueprint:
-# Recommended Secure State Schema Change
-type VerifyPhonePayload {
+### Recommended Secure State Schema Change
+
+'''type VerifyPhonePayload {
   success: Boolean!
   stateVerificationToken: String! # Cryptographically signed server-side token containing timestamped session hash
 }
@@ -119,7 +121,7 @@ type VerifyPhonePayload {
 All subsequent onboarding mutations must explicitly demand the ⁠stateVerificationToken⁠ as an mandatory parameter header, verifying its signature server-side before processing user registration data.
 
 
-🛠️ Automated Exploit PoCs
+####🛠️ Automated Exploit PoCs
 Concurrency Validation Engine
 A production-grade lab simulation script designed to execute multi-threaded race-condition testing against isolated session node
 
