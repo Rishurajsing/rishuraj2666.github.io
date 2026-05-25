@@ -5,11 +5,11 @@
 
 ---
 
-[![Bugcrowd](https://img.shields.io/badge/Bugcrowd-rishuraj2666-orange?style=for-the-badge&logo=bugcrowd&logoColor=white)](https://bugcrowd.com/rishuraj266)
+[![Bugcrowd](https://img.shields.io/badge/Bugcrowd-rishuraj2666-orange?style=for-the-badge&logo=bugcrowd&logoColor=white)](https://bugcrowd.com/rishuraj2666)
 [![Intigriti](https://img.shields.io/badge/Intigriti-rishuraj2666-blue?style=for-the-badge&logo=securityscorecard&logoColor=white)](https://intigriti.com)
-[![HackerOne](https://img.shields.io/badge/HackerOne-Active-lightgrey?style=for-the-badge&logo=hackerone&logoColor=white)](https://hackerone.com)
+[![HackerOne](https://img.shields.io/badge/HackerOne-rishusec-lightgrey?style=for-the-badge&logo=hackerone&logoColor=white)](https://hackerone.com)
 
-🚀 **[Rishuraj266@gmail.com](mailto:Rishuraj2666@gmail.com)** | 🌐 **[rishuraj2666.github.io](https://rishuraj2666.github.io)**
+🚀 **[Rishuraj2666@gmail.com](mailto:Rishuraj2666@gmail.com)** | 🌐 **[rishuraj2666.github.io](https://rishuraj2666.github.io)**
 
 
 ---
